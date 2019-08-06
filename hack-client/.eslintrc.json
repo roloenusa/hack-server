@@ -1,0 +1,24 @@
+{
+  "parser": "babel-eslint",
+  "extends": "eslint-config-airbnb",
+  "env": {
+    "browser": true,
+    "node": true
+  },
+  "rules": {
+    "arrow-body-style": [2, "as-needed"],
+    "curly": [2, "all"],
+    "react/jsx-curly-brace-presence": [1, { "props": "always", "children": "ignore" }],
+    "react/jsx-no-literals": [1, {"noStrings": false}],
+    "react/react-in-jsx-scope": 0,
+    "react/jsx-filename-extension": [
+      1,
+      {
+        "extensions": [
+          ".js",
+          ".jsx"
+        ]
+      }
+    ]
+  }
+}
