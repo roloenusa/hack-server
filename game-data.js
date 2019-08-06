@@ -1,5 +1,5 @@
 module.exports = {
-    base : {
+    basestats : {
         maxhp: 1200,
         dmg: 40,
         evasion: 0,
@@ -8,7 +8,8 @@ module.exports = {
         critrate: 15,
         lifesteal: 0,
         regen: 0,
-        atkspd: 1000
+        atkspd: 1000,
+        dmgreduction: 0,
     },
     elementdmg: 25,
     elements: [
@@ -56,7 +57,7 @@ module.exports = {
         },
         {
             title: '+50% hp',
-            effect: { property: 'maxhp', amount: 50 }
+            effect: { property: 'maxhp', amount: 50, multiply: true }
         },
         {
             title: '+10% crit rate',
@@ -64,7 +65,7 @@ module.exports = {
         },
         {
             title: '+10% atk speed',
-            effect: { property: 'atkspd', amount: 10 }
+            effect: { property: 'atkspd', amount: 10, multiply: true }
         },
     ],
     weaknesses: [
@@ -78,11 +79,11 @@ module.exports = {
         },
         {
             title: '-50% Max HP',
-            effect: { property: 'maxhp', amount: -50 }
+            effect: { property: 'maxhp', amount: -50, multiply: true }
         },
         {
             title: '-25% dmg',
-            effect: { property: 'dmg', amount: -25 }
+            effect: { property: 'dmg', amount: -25, multiply: true }
         },
         {
             title: '-25% Crit Dmg',
@@ -94,7 +95,7 @@ module.exports = {
         },
         {
             title: '-10% Atk Speed',
-            effect: { property: 'atkspeed', amount: -10 }
+            effect: { property: 'atkspeed', amount: -10, multiply: true }
         },
     ]
 }
