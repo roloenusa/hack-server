@@ -8,6 +8,7 @@ module.exports = {
         critrate: 15,
         lifesteal: 0,
         regen: 0,
+        bleed: 0,
         atkspd: 1000,
         dmgreduction: 0,
     },
