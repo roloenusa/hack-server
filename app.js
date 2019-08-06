@@ -2,6 +2,7 @@ const express = require('express');
 const expressWs = require('express-ws');
 
 const app = express();
+const gameData = require('./game-data.js');
 
 /**
  * Middlewares
@@ -18,6 +19,10 @@ app.use((req, res, next) => {
  */
 app.get('/', (req, res) => {
   res.send("This is a test...");
+});
+
+app.get('/gamedata', (req, res) => {
+  res.json(gameData);
 });
 
 /**
