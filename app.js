@@ -16,6 +16,9 @@ app.use((req, res, next) => {
 /**
  * Routes
  */
+app.get('/', (req, res) => {
+  res.send("This is a test...");
+});
 
 /**
  * Start
