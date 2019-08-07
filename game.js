@@ -25,7 +25,7 @@ module.exports = class Game {
             const player = this.players[i];
             const connection = this.connections[i];
 
-            console.log('sending state', state);
+            console.log('sending state', {player: player, gamedata: state});
             connection.send(state);
         }
     }
@@ -37,7 +37,7 @@ module.exports = class Game {
         this.state = gameData.gamestates.starting;
         this._stateChanged();
         
-        //Stars a countdown
+        //Starts a countdown
         let count = 5;
         this.statedata = {time: count};
         this._stateChanged();
