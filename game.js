@@ -16,16 +16,16 @@ module.exports = class Game {
     }
 
     _stateChanged(){
-        const state = JSON.stringify(this, function(key, value){
-            if(key === 'connections') return undefined;
-            else return value;
-        });
-
         for(let i = 0; i < this.players.length; i++) {
             const player = this.players[i];
             const connection = this.connections[i];
 
-            console.log('sending state', {player: player, gamedata: state});
+            const state = JSON.stringify({player: player, gamedata: this}, function(key, value){
+                if(key === 'connections') return undefined;
+                else return value;
+            });
+
+            console.log('sending state', state);
             connection.send(state);
         }
     }
