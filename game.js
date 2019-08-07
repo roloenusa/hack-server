@@ -5,6 +5,7 @@ const CHARACTER_LIMIT = 4;
 //Runs the entire game flow
 module.exports = class Game {
     constructor(socket, playername, playerid) {
+        this.players = [];
         this._addPlayer(socket, {name: playername, id: playerid});
         this.state = gameData.gamestates.waiting; 
         this.statedata = {};
@@ -82,8 +83,8 @@ module.exports = class Game {
         }
     }
 
+    //Start battle waiting countdown
     _battleStarting(){
-        //Start battle waiting
         this.state = gameData.gamestates.battlestarting;
         let count = 5;
         this.statedata = {time: count};
@@ -103,6 +104,7 @@ module.exports = class Game {
         }, 1000);
     }
 
+    //Start the battle
     _startBattle(){
         this.state = gameData.gamestates.battle;
         this._stateChanged();
