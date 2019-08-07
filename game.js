@@ -39,7 +39,7 @@ module.exports = class Game {
         this.connections.push(socket);
         this.players.push(player);
        
-        ws.on('message', function(msg) {
+        socket.on('message', function(msg) {
             try {
                 const data = JSON.parse(msg);
                 if(data.type === 'character') this._addCharacter(
