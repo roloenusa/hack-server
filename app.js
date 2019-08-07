@@ -17,6 +17,7 @@ app.use((req, res, next) => {
   next(); // Call the next piece of middleware.
 });
 
+app.use(express.static('public'));
 
 /**
  * Game routes
