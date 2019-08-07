@@ -48,6 +48,7 @@ app.ws('/', function(ws, req) {
     try {
       const data = JSON.parse(msg);
       if(data.type === 'join') joinGame(ws, data);
+      //TODO unwatch and remove game
     } catch(err) {
       //Do not respond to invalid json
       console.log('invalid json message', err);
