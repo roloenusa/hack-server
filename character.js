@@ -42,9 +42,6 @@ module.exports = class Character {
     sendAttack(enemy){
         let dmg = this.stats.dmg;
 
-        //Amplify the damage
-        dmg += this._percentOf(this.stats.amplify, dmg);
-
         //TODO: calculate element amplification
         
         //Caculate crit chance and crit damage
@@ -65,6 +62,14 @@ module.exports = class Character {
     receiveAttack(attack) {
         const enemy = attack.from;
         let dmg = attack.dmg;
+        let originalDmg = dmg;
+
+        //Reduce the damage ensuring to amplify the original dmg amount
+        dmg += this._percentOf(this.stats.dmgreduction, originalDmg);
+
+        //Amplify the damage ensuring to amplify the original dmg amount
+        dmg += this._percentOf(this.stats.amplify, originalDmg);
+
         //No evading damage reflection
         const didEvade = !attack.reflect && this._getChance(this.stats.evasion);
 
@@ -104,10 +109,13 @@ module.exports = class Character {
         return percent < rand;
     }
 
+    //Returns a random element from a provided array
     _randomElement(list){
         return list[Math.floor(Math.random()*list.length)];
     }
 
+    //Calling tick at an interval will run attacks and life cycle for the character
+    //tick returns any attack instances.
     _tick(enemies, milliseconds) {
         const actions = [];
         this.lastAttack += milliseconds;

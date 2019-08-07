@@ -1,4 +1,12 @@
 module.exports = {
+    gamestates : {
+        'waiting': 0,
+        'starting': 1,
+        'building': 2,
+        'battlestarting': 3,
+        'battle': 4,
+        'end': 5
+    },
     basestats : {
         maxhp: 1200,
         dmg: 40,
