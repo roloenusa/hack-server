@@ -44,17 +44,30 @@ const Input = Styled.input`
 class App extends React.Component {
   @observable game = null
   @observable users = []
-  @observable gameData = {};
+  @observable gameState = {};
+
+  gameData = {}
 
   componentWillMount() {
+    fetch("http://localhost:3001/gamedata")
+    .then(res => res.json())
+    .then((result) => {
+        this.gameData = result;
+      },
+      // Note: it's important to handle errors here
+      // instead of a catch() block so that we don't swallow
+      // exceptions from actual bugs in components.
+      (error) => {
+        throw error;
+      }
+    )
+    .then
     client.onopen = () => {
       console.log('WebSocket Client Connected');
     };
 
     client.onmessage = (message) => {
-      console.log(message);
       const dataFromServer = JSON.parse(message.data);
-      console.log(dataFromServer);
       this.setGameData(dataFromServer); 
     };
   }
@@ -71,7 +84,7 @@ class App extends React.Component {
   }
 
   @action setGameData = (data) => {
-    this.gameData = data
+    this.gameState = data
   }
 
   findBattleUI = () => {
@@ -90,16 +103,16 @@ class App extends React.Component {
 
   countdownBattleUI = () => {
     return (
-      <h1>Join... {this.gameData.gamedata.statedata.time}</h1>
+      <h1>Join... {this.gameState.gamedata.statedata.time}</h1>
     );
   }
 
   renderGameState = () => {
-    if (!this.gameData.gamedata) {
+    if (!this.gameState.gamedata) {
       return this.findBattleUI()
-    } else if (this.gameData.gamedata.state === 0) {
+    } else if (this.gameState.gamedata.state === 0) {
       return this.waitingBattleUI();
-    } else if (this.gameData.gamedata.state === 1) {
+    } else if (this.gameState.gamedata.state === 1) {
       return this.countdownBattleUI();
     }
   }
