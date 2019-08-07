@@ -8,8 +8,10 @@ module.exports = {
         critrate: 15,
         lifesteal: 0,
         regen: 0,
+        bleed: 0,
         atkspd: 1000,
         dmgreduction: 0,
+        amplify: 0,
     },
     elementdmg: 25,
     elements: [
@@ -36,7 +38,7 @@ module.exports = {
             effect: { property: 'evasion', amount: 50 }
         },
         {
-            title: 'Relect 20% dmg',
+            title: 'Reflect 20% dmg',
             effect: { property: 'reflect', amount: 20 }
         },
         {

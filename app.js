@@ -3,9 +3,7 @@ const express = require('express');
 const app = express();
 const expressWs = require('express-ws')(app);
 const gameData = require('./game-data.js');
-
-const http = require('http');
-const WebSocket = require('ws');
+const character = require('./character.js');
 
 /**
  * Middlewares
@@ -17,23 +15,6 @@ app.use((req, res, next) => {
   console.log(`[${new Date().toLocaleString()}][${red}${req.method}${nc}] => ${req.originalUrl}`);
   next(); // Call the next piece of middleware.
 });
-
-// const server = http.createServer(app);
-// const wss = new WebSocket.Server({server});
-
-// wss.on('connection', (ws) => {
-//   console.log("connection");
-//   //connection is up, let's add a simple simple event
-//   ws.onmessage((message) => {
-
-//       //log the received message and send it back to the client
-//       console.log('received: %s', message);
-//       ws.send(`Hello, you sent -> ${message}`);
-//   });
-
-//   //send immediatly a feedback to the incoming connection    
-//   ws.send('Hi there, I am a WebSocket server');
-// });
 
 
 /**
@@ -78,10 +59,21 @@ app.ws('/test', function(ws, req) {
   });
 });
 
+app.get('/charactertest', (req, res) => {
+  const c1 = new character('Character 1', 'p1c1', '', [gameData.strengths[0], gameData.weaknesses[0]], 'Earth');
+  const c2 = new character('Character 2', 'p2c2', '', [gameData.strengths[1], gameData.weaknesses[1]], 'Water');
+  res.json({
+    character1: c1,
+    character2: c2,
+    sampleAttack: c1.sendAttack(c2)
+  });
+});
+
 /**
  * Start
  */
-// Starting on port 3001 since create-react-app wants to start on 3000
+
+ // Starting on port 3001 since create-react-app wants to start on 3000
 const port = process.env.PORT || 3001;
 app.listen(port, () => 
   console.log(`Express server is running on port: ${port}...`)
