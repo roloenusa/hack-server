@@ -4,6 +4,8 @@ import { action, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import Editor from 'react-medium-editor';
 import FindBattleScreen from './screens/FindBattleScreen';
+import FindingBattleScreen from './screens/FindingBattleScreen';
+import VsScreen from './screens/VsScreen';
 import CharacterCreationScreen from './screens/CharacterCreationScreen';
 
 
@@ -79,9 +81,9 @@ class App extends React.Component {
     this.username = event.target.value.trim();
   }
 
-  @action findBattle = () => {
+  @action onFindBattle = (username) => {
     client.send(JSON.stringify({
-      username: this.username,
+      username: username,
       type: 'join'
     }));
   }
@@ -161,35 +163,16 @@ class App extends React.Component {
     client.send(JSON.stringify(character));
   }
 
-  renderGameState = () => {
+  render() {
     if (!this.gameState.gamedata) {
-      return <FindBattleScreen />
+      return <FindBattleScreen onFindBattle={this.onFindBattle} />
     } else if (this.gameState.gamedata.state === 0) {
-      return this.waitingBattleUI();
+      return <FindingBattleScreen />
     } else if (this.gameState.gamedata.state === 1) {
-      return this.countdownBattleUI();
+      return <VsScreen playerName={this.gameState.player.name} opponentName={this.gameState.opponent.name} text="Building starts in" count={this.gameState.gamedata.statedata.time} />
     } else if (this.gameState.gamedata.state === 2) {
       return this.createCharacterUI();
     }
-  }
-
-  render() {
-    const username = this.username;
-    return (
-      <Container className="container d-flex h-100 flex-column">
-        <React.Fragment>
-          <div className="row flex-fill">
-            <div className="col align-self-center content">
-              <div>
-              {
-                this.renderGameState()
-              }
-              </div>
-            </div>
-          </div>
-        </React.Fragment>
-      </Container>
-    );
   }
 }
 
