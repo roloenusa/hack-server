@@ -6,6 +6,7 @@ const CHARACTER_LIMIT = 4;
 module.exports = class Game {
     constructor(socket, playername, playerid) {
         this.players = [];
+        this.connections = [];
         this._addPlayer(socket, {name: playername, id: playerid});
         this.state = gameData.gamestates.waiting; 
         this.statedata = {};
