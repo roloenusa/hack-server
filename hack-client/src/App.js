@@ -3,7 +3,8 @@ import React from 'react';
 import { action, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import Editor from 'react-medium-editor';
-import FindBattleScreen from './components/FindBattleScreen';
+import FindBattleScreen from './screens/FindBattleScreen';
+import CharacterCreationScreen from './screens/CharacterCreationScreen';
 
 
 import Identicon from 'react-identicons';
@@ -49,27 +50,6 @@ class App extends React.Component {
   @observable gameState = {};
   @observable gameData = {};
 
-  @observable currentCharacter = {}
-  @observable strength = null;
-  @observable weakness = null;
-  @observable element = null;
-  @observable icon = null;
-
-  @action setStrength = (event) => {
-    this.strength = event.target.value;
-  }
-  @action setWeakness = (event) => {
-    this.weakness = event.target.value;
-  }
-  @action setElement = (event) => {
-    this.element = event.target.value;
-  }
-  @action setIcon = (event) => {
-    console.log(event.target.name);
-    this.icon = event.target.name;
-  }
-
-
   componentWillMount() {
     fetch("http://localhost:3001/gamedata")
     .then(res => res.json())
@@ -111,8 +91,6 @@ class App extends React.Component {
   }
 
   @action setGameData = (data) => {
-    console.log('-- data')
-    console.log(data.strengths);
     this.gameData = data
   }
 
@@ -144,59 +122,12 @@ class App extends React.Component {
     );
   }
 
-  optionsMap = (type, selectList, func) => {
-    return (
-    <select className="form-control form-control-lg" onChange={func}>
-      <option>{type}</option>
-      {
-        selectList.map((e, i) => 
-          <option value={i}>{e.title}</option>
-        )
-      }
-    </select>
-    )
-  }
-
   createCharacterUI = () => {
     if (this.gameData.strengths) {
       return (
         <div className="row">
           <div className="col">
-            <h2>Make Your Character</h2>
-            <div className="char-creation">
-
-              <div className="form-group">
-              {
-                this.gameData.strengths ? this.optionsMap('strengths', this.gameData.strengths, this.setStrength) : ''
-              }
-              </div>
-              <div className="form-group">
-              {
-                this.gameData.weaknesses ? this.optionsMap('weaknesses', this.gameData.weaknesses, this.setWeakness) : ''
-              }
-              </div>
-              <div className="form-group">
-              {
-                this.gameData.elements ? this.optionsMap('elements', this.gameData.elements, this.setElement) : ''
-              }
-              </div>
-              <div className="row">
-                <h3>Pick your character image</h3>
-                {
-                  this.gameData.icons.map((e) => {
-                    return (
-                      <div className="col-4 char-imgs">
-                        <img src={"http://localhost:3001/img/characters/" + e + ".png"} name={e} onClick={this.setIcon} />
-                      </div>
-                    )
-                  })
-                }
-              </div>
-
-              <div className="row">
-                <Button onClick={this.lockCharacter} className="col-12 btn btn-primary">Lock in</Button>
-              </div>
-            </div>
+            <CharacterCreationScreen gameData={this.gameData} lockCharacter={this.lockCharacter} />
           </div>
 
           <div className="col">
@@ -226,31 +157,20 @@ class App extends React.Component {
     }
   }
 
-  lockCharacter = () => {
-    let character = {
-      type: 'character',
-      strength: this.gameData.strengths[this.strength],
-      weakness: this.gameData.weaknesses[this.weakness],
-      element: this.gameData.elements[this.element].title,
-      icon: this.icon,
-    }
+  lockCharacter = (character) => {
     client.send(JSON.stringify(character));
-    this.strength = null;
-    this.weakness = null;
-    this.element = null;
-    this.icon = null;
   }
 
   renderGameState = () => {
     if (!this.gameState.gamedata) {
-      return this.findBattleUI()
+      return <FindBattleScreen />
     } else if (this.gameState.gamedata.state === 0) {
       return this.waitingBattleUI();
     } else if (this.gameState.gamedata.state === 1) {
       return this.countdownBattleUI();
-   } else if (this.gameState.gamedata.state === 2) {
-     return this.createCharacterUI();
-   }
+    } else if (this.gameState.gamedata.state === 2) {
+      return this.createCharacterUI();
+    }
   }
 
   render() {
