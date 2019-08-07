@@ -15,6 +15,10 @@ module.exports = class Character {
         //Apply the effects to the character's stats
         for(let i = 0; i < effects.length; i++) this.applyEffect(effects[i]);
 
+        this.totals = {
+            dmg: 0,
+        };
+
         //Set the actual hp from the maxhp
         //This is the actual life of the character
         this.hp = this.stats.maxhp;
@@ -48,13 +52,14 @@ module.exports = class Character {
         const didCrit = this._getChance(this.stats.critrate);
         if(didCrit) dmg += this._percentOf(this.stats.critdmg, dmg);
 
-        const adjustedAttack = enemy.receiveAttack({ from: this, dmg: dmg, didCrit: didCrit });
+        const adjustedAttack = enemy.receiveAttack({ from: this.id, dmg: dmg, didCrit: didCrit });
 
         if(!adjustedAttack.didEvade) {
             //increase hp for any life steal which is calculated after damage reduction
             this.hp += this._percentOf(this.stats.lifesteal, adjustedAttack.dmg);
         }
 
+        this.totals.dm += adjustedAttack.dmg;
         return adjustedAttack;
     }
 
@@ -91,7 +96,7 @@ module.exports = class Character {
 
         if(this.hp <= 0) this.alive = false;
 
-        return { type: 'atk', from: enemy, to: this, didEvade: didEvade, dmg: dmg, reflected: reflected }
+        return { type: 'atk', from: enemy.id, to: this.id, didEvade: didEvade, dmg: dmg, reflected: reflected }
     }
 
     //give a percent and an amount returns a percent of that number
