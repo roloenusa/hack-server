@@ -3,6 +3,7 @@ import React from 'react';
 import { action, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import Editor from 'react-medium-editor';
+import FindBattleScreen from './components/FindBattleScreen';
 
 
 import Identicon from 'react-identicons';
@@ -119,6 +120,10 @@ class App extends React.Component {
 
   render() {
     const username = this.username;
+    return (
+      <FindBattleScreen />
+    )
+
     return (
       <Container className="container d-flex h-100 flex-column">
         <React.Fragment>

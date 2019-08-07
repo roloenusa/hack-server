@@ -29,8 +29,8 @@ module.exports = class Game {
             const player = this.players[i];
             const connection = this.connections[i];
 
-            const state = JSON.stringify({player: player, gamedata: this}, function(key, value){
-                if(key === 'connections' || key === 'tick' || key === 'finishedHandler') return undefined;
+            const state = JSON.stringify({player: player, opponent: this._getOpponent(player), gamedata: this}, function(key, value){
+                if(key === 'connections' || key === 'tick' || key === 'finishedHandler' || key === 'players') return undefined;
                 else return value;
             });
 
@@ -75,7 +75,7 @@ module.exports = class Game {
 
         const name = 'Character ' + player.characters.length;
         const id = playr.id + '-' + player.characters.length;
-        const character = new Character(name, id, icon, [strength, weakness], element);
+        const character = new Character(name, id, icon, strength, weakness, element);
         player.characters.push(character);
         this.totalCharacters++;
         

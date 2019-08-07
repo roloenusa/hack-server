@@ -1,7 +1,7 @@
 const gameData = require('./game-data.js');
 
 module.exports = class Character {
-    constructor(name, id, icon, effects, element) {
+    constructor(name, id, icon, strength, weakness, element) {
         //Clone the base stats into a stats property
         this.id = id;
         this.lastAttack = 0;
@@ -10,10 +10,12 @@ module.exports = class Character {
         this.element = element;
         this.name = name;
         this.icon = icon;
-        this.effects = effects;
 
         //Apply the effects to the character's stats
-        for(let i = 0; i < effects.length; i++) this.applyEffect(effects[i]);
+        this.strength = strength;
+        this.weakness = weakness;
+        this.applyEffect(strength);
+        this.applyEffect(weakness);
 
         this.totals = {
             dmg: 0,
@@ -52,7 +54,7 @@ module.exports = class Character {
         const didCrit = this._getChance(this.stats.critrate);
         if(didCrit) dmg += this._percentOf(this.stats.critdmg, dmg);
 
-        const adjustedAttack = enemy.receiveAttack({ from: this.id, dmg: dmg, didCrit: didCrit });
+        const adjustedAttack = enemy.receiveAttack({ from: this, dmg: dmg, didCrit: didCrit });
 
         if(!adjustedAttack.didEvade) {
             //increase hp for any life steal which is calculated after damage reduction
@@ -85,7 +87,7 @@ module.exports = class Character {
         //Reflect the damage to the attacker as long as this is not a reflected attack
         if(reflect > 0 && !attack.reflect) {
             reflected = reflect;
-            enemy.receiveAttack({dmg: reflect, reflect: true, didCrit: false});
+            enemy.receiveAttack({from: this, dmg: reflect, reflect: true, didCrit: false});
         }
 
         //Damage reduction

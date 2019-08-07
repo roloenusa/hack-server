@@ -79,8 +79,8 @@ app.ws('/test', function(ws, req) {
 });
 
 app.get('/charactertest', (req, res) => {
-  const c1 = new character('Character 1', 'p1c1', '', [gameData.strengths[0], gameData.weaknesses[0]], 'Earth');
-  const c2 = new character('Character 2', 'p2c2', '', [gameData.strengths[1], gameData.weaknesses[1]], 'Water');
+  const c1 = new character('Character 1', 'p1c1', '', gameData.strengths[0], gameData.weaknesses[0], 'Earth');
+  const c2 = new character('Character 2', 'p2c2', '', gameData.strengths[1], gameData.weaknesses[1], 'Water');
   res.json({
     character1: c1,
     character2: c2,
