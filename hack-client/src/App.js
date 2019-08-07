@@ -14,154 +14,118 @@ import {
 // import 'medium-editor/dist/css/medium-editor.css';
 // import 'medium-editor/dist/css/themes/default.css';
 
+
+
 import { w3cwebsocket as W3CWebSocket } from "websocket";
 
 const client = new W3CWebSocket('ws://127.0.0.1:3001');
+const client2 = new W3CWebSocket('ws://127.0.0.1:3001/test');
+const contentDefaultMessage = "Start writing your document here";
+
+const Container = Styled.div`
+  display: flex;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+`;
+
+const Button = Styled.button`
+`;
+
+const H1 = Styled.h1`
+`;
+
+const Input = Styled.input`
+`;
+
 
 @observer
 class App extends React.Component {
   @observable game = null
   @observable users = []
-
-  logInUser = () => {
-    const username = this.username.value;
-    if (username.trim()) {
-      this.username = username
-      client.send(
-        JSON.stringify({
-          username: this.username,
-          type: "userevent"
-        })
-      );
-    }
-  }
-
-  onEditorStateChange = (event) => {
-    console.log(event.target.value);
-    client.send(JSON.stringify({
-      type: "contentchange",
-      username: this.username,
-      content: event.target.value
-    }));
-  };
-
-
-  componentDidMount() {
-    client.send(JSON.stringify({
-      type: "join",
-      username: 'Bob smither',
-    }));
-
-    fetch('http://localhost:3001')
-    .then(res => {
-      return res.json()
-    })
-    .then(users => {
-      this.users = users
-    });
-  }
+  @observable gameData = {};
 
   componentWillMount() {
     client.onopen = () => {
       console.log('WebSocket Client Connected');
     };
+
     client.onmessage = (message) => {
       console.log(message);
       const dataFromServer = JSON.parse(message.data);
       console.log(dataFromServer);
-      if (dataFromServer.type === "userevent") {
-        this.currentUsers = Object.values(dataFromServer.data.users);
-      } else if (dataFromServer.type === "contentchange") {
-        this.text = dataFromServer.data.editorContent || contentDefaultMessage;
-      }
-      console.log("== ")
-      console.log(dataFromServer);
-      this.userActivity = dataFromServer.data.userActivity;
-      console.log("== ")
+      this.setGameData(dataFromServer); 
     };
   }
 
-  showLoginSection = () => (
-    <div className="account">
-      <div className="account__wrapper">
-        <div className="account__card">
-          <div className="account__profile">
-            <Identicon className="account__avatar" size={64} string="randomness" />
-            <p className="account__name">Hello, user!</p>
-            <p className="account__sub">Join to edit the document</p>
-          </div>
-          <input name="username" ref={(input) => { this.username = input; }} className="form-control" />
-          <button type="button" onClick={() => this.logInUser()} className="btn btn-primary account__btn">Join</button>
-        </div>
-      </div>
-    </div>
-  )
-
-
-  getUserNames = () => {
-    return this.users.map(user =>{
-      return <li key={user.id}>{user.username}</li>
-    })
+  @action setUsername = (event) => {
+    this.username = event.target.value.trim();
   }
 
-  showEditorSection = () => (
-    <div className="main-content">
-      <div className="document-holder">
-        <div className="currentusers">
-          {this.currentUsers.map(user => (
-            <React.Fragment>
-              <span id={user.username} className="userInfo" key={user.username}>
-                <Identicon className="account__avatar" style={{ backgroundColor: user.randomcolor }} size={40} string={user.username} />
-              </span>
-              <UncontrolledTooltip placement="top" target={user.username}>
-                {user.username}
-              </UncontrolledTooltip>
-            </React.Fragment>
-          ))}
-        </div>
-        {/* <Editor
-          options={{
-            placeholder: {
-              text: this.text ? contentDefaultMessage : ""
-            }
-          }}
-          className="body-editor"
-          text={this.text}
-          onChange={this.onEditorStateChange}
-        /> */}
+  @action findBattle = () => {
+    client.send(JSON.stringify({
+      username: this.username,
+      type: 'join'
+    }));
+  }
 
-        <textarea value={this.text} onChange={this.onEditorStateChange} />
-      </div>
-      <div className="history-holder">
-        <ul>
-          {this.userActivity.map((activity, index) => <li key={`activity-${index}`}>{activity}</li>)}
-        </ul>
-      </div>
-    </div>
-  )
+  @action setGameData = (data) => {
+    this.gameData = data
+  }
 
-  // render() {
-  //   const result = this.getUserNames();
-  //   return (
-  //     <div className="App">
-  //       <h1>Users</h1>
-  //       <ul>
-  //         { result }
-  //       </ul>
-  //       <div>
-  //         { this.showEditorSection() }
-  //       </div>
-  //     </div>
-  //   );
-  // }
+  findBattleUI = () => {
+    return (
+    <Button onClick={this.findBattle} className="btn btn-primary">
+      Find a battle
+    </Button>
+    );
+  }
+
+  waitingBattleUI = () => {
+    return (
+      <h1>Waiting...</h1>
+    );
+  }
+
+  countdownBattleUI = () => {
+    return (
+      <h1>Join... {this.gameData.gamedata.statedata.time}</h1>
+    );
+  }
+
+  renderGameState = () => {
+    if (!this.gameData.gamedata) {
+      return this.findBattleUI()
+    } else if (this.gameData.gamedata.state === 0) {
+      return this.waitingBattleUI();
+    } else if (this.gameData.gamedata.state === 1) {
+      return this.countdownBattleUI();
+    }
+  }
+
   render() {
     const username = this.username;
     return (
-      <React.Fragment>
-        <div className="container-fluid">
-          {this.showEditorSection()}
-        </div>
-      </React.Fragment>
+      <Container className="container d-flex h-100 flex-column">
+        <React.Fragment>
+          <div className="row flex-fill">
+            <div className="col align-self-center content">
+              <H1>
+                Collabwar
+              </H1>
+              <div>
+                <input placeholder="enter a username" onChange={this.setUsername}/>
+              </div>
+              <div>
+              {
+                this.renderGameState()
+              }
+              </div>
+            </div>
+          </div>
+        </React.Fragment>
+      </Container>
     );
   }
 }
