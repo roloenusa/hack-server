@@ -1,35 +1,46 @@
 const gameData = require('./game-data.js');
-const EventEmitter = require('events');
-
 
 //Runs the entire game flow
 module.exports = class Game {
-    constructor(playername, playerid) {
-        this.events = new EventEmitter();
+    constructor(socket, playername, playerid) {
+        //Anything in private will be exluded from json output
+        this.connections = [socket];
         this.players = [{name: playername, id: playerid}];
         this.state = gameData.gamestates.waiting; 
-        this.statedata = {};   
-    }
-
-    subscribe(listener){
-        this.events.addListener(listener);
-    }
-
-    unsubscribe(listener){
-        this.events.removeListener(listener);
+        this.statedata = {};
+        this._stateChanged();   
     }
 
     canJoinGame() {
         return this.players.length === 1;
     }
 
+    _stateChanged(){
+        const state = JSON.stringify(this, function(key, value){
+            if(key === 'connections') return undefined;
+            else return value;
+        });
+
+        for(let i = 0; i < this.players.length; i++) {
+            const player = this.players[i];
+            const connection = this.connections[i];
+
+            console.log('sending state', state);
+            connection.send(state);
+        }
+    }
+
     //Adds a player to a game and starts the game
-    joinGame(playername, playerid) {
+    joinGame(socket, playername, playerid) {
+        this.connections.push(socket);
         this.players.push({name: playername, id: playerid});
         this.state = gameData.gamestates.starting;
-        this.events.emit(this);
+        this._stateChanged();
         
+        //Stars a countdown
         let count = 5;
+        this.statedata = {time: count};
+        this._stateChanged();
 
         const timer = setInterval(() => {
             count--;
@@ -38,7 +49,7 @@ module.exports = class Game {
                 this.state = gameData.gamestates.building;
                 clearInterval(timer);
             }
-            this.events.emit(this);
+            this._stateChanged();
         }, 1000);
     }
 

@@ -3,7 +3,11 @@ const express = require('express');
 const app = express();
 const expressWs = require('express-ws')(app);
 const gameData = require('./game-data.js');
+const game = require('./game.js');
 const character = require('./character.js');
+
+const games = [];
+let uuid = 0;
 
 /**
  * Middlewares
@@ -40,13 +44,14 @@ let editorContent = null;
 let userActivity = [];
 
 app.ws('/', function(ws, req) {
-  console.log("on connected");
   ws.on('message', function(msg) {
-    console.log(`${req.originalUrl}: ${msg}`)
-    var message = handleMessage(msg);
-    expressWs.getWss().clients.forEach(client => {
-      client.send(message);
-    })
+    try {
+      const data = JSON.parse(msg);
+      if(data.type === 'join') joinGame(ws, data);
+    } catch(err) {
+      //Do not respond to invalid json
+      console.log('invalid json message', err);
+    }
   });
 });
 
@@ -54,7 +59,7 @@ app.ws('/test', function(ws, req) {
   ws.on('message', function(msg) {
     console.log(`${req.originalUrl}: ${msg}`)
     expressWs.getWss().clients.forEach(client => {
-      client.send(msg);
+      client.send(msg); 
     })
   });
 });
@@ -68,6 +73,23 @@ app.get('/charactertest', (req, res) => {
     sampleAttack: c1.sendAttack(c2)
   });
 });
+
+//Creates a user id and joins a game or creates a new game if there are none to join
+const joinGame = function(client, data) {
+    const userid = uuid++;
+
+    //Find an open game
+    for(let i = 0; i < games.length; i++) {
+      if(games[i].canJoinGame()){
+        games[i].joinGame(client, data.username, userid);
+        return;
+      }
+    }
+
+    //No open games, lets create one
+    const g = new game(client, data.username, userid);
+    games.push(g);
+}
 
 /**
  * Start

@@ -17,15 +17,11 @@ import {
 import { w3cwebsocket as W3CWebSocket } from "websocket";
 
 const client = new W3CWebSocket('ws://127.0.0.1:3001');
-const contentDefaultMessage = "Start writing your document here";
 
 @observer
 class App extends React.Component {
+  @observable game = null
   @observable users = []
-  @observable currentUsers = []
-  @observable userActivity = []
-  @observable text = '';
-  @observable username = 'john'
 
   logInUser = () => {
     const username = this.username.value;
@@ -51,6 +47,11 @@ class App extends React.Component {
 
 
   componentDidMount() {
+    client.send(JSON.stringify({
+      type: "join",
+      username: 'Bob smither',
+    }));
+
     fetch('http://localhost:3001')
     .then(res => {
       return res.json()
