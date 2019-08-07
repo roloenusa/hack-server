@@ -4,6 +4,9 @@ const expressWs = require('express-ws');
 
 const app = express();
 const gameData = require('./game-data.js');
+const character = require('./character.js');
+
+
 
 /**
  * Middlewares
@@ -28,6 +31,16 @@ app.get('/', (req, res) => {
 
 app.get('/gamedata', (req, res) => {
   res.json(gameData);
+});
+
+app.get('/charactertest', (req, res) => {
+  const c1 = new character('Character 1', 'p1c1', '', [gameData.strengths[0], gameData.weaknesses[0]], 'Earth');
+  const c2 = new character('Character 2', 'p2c2', '', [gameData.strengths[1], gameData.weaknesses[1]], 'Water');
+  res.json({
+    character1: c1,
+    character2: c2,
+    sampleAttack: c1.sendAttack(c2)
+  });
 });
 
 /**

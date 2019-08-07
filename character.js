@@ -1,8 +1,9 @@
 const gameData = require('./game-data.js');
 
 module.exports = class Character {
-    constructor(name, icon, effects, element) {
+    constructor(name, id, icon, effects, element) {
         //Clone the base stats into a stats property
+        this.id = id;
         this.lastAttack = 0;
         this.lastHealthTick = 0;
         this.stats = Object.assign({}, gameData.basestats);
@@ -26,33 +27,43 @@ module.exports = class Character {
     //amount   - How much in percentage
     //multiply - if set then the property will be increased by the percentage of the current value
     //           if not set then the amount will simply be added to the property value             
-    applyEffect(effect) {
-        let statAmount = this.stats[property];
+    applyEffect(effectData) {
+        const effect = effectData.effect;
+        let statAmount = this.stats[effect.property];
         if(effect.multiply){
            statAmount += this._percentOf(effect.amount, statAmount);
         } else {
            statAmount += effect.amount;
         }
         //Ensure we never use a minus value
-        this.stats[property] = Math.max(0, statAmount );
+        this.stats[effect.property] = Math.max(0, statAmount );
     }
 
     sendAttack(enemy){
         let dmg = this.stats.dmg;
+
+        //Amplify the damage
+        dmg += this._percentOf(this.stats.amplify, dmg);
+
+        //TODO: calculate element amplification
         
         //Caculate crit chance and crit damage
         const didCrit = this._getChance(this.stats.critrate);
         if(didCrit) dmg += this._percentOf(this.stats.critdmg, dmg);
 
-        //increase hp for any life steal which is calculated before damage reduction
-        this.hp += this._percentOf(this.stats.lifesteal, dmg);
+        const adjustedAttack = enemy.receiveAttack({ from: this, dmg: dmg, didCrit: didCrit });
 
-        return enemy.receiveAttack({ dmg: dmg, didCrit: didCrit });
+        if(!adjustedAttack.didEvade) {
+            //increase hp for any life steal which is calculated after damage reduction
+            this.hp += this._percentOf(this.stats.lifesteal, adjustedAttack.dmg);
+        }
+
+        return adjustedAttack;
     }
 
     //Decides how much damage to actually take from an attack
-    receiveAttack(enemy, attack) {
- 
+    receiveAttack(attack) {
+        const enemy = attack.from;
         let dmg = attack.dmg;
         //No evading damage reflection
         const didEvade = !attack.reflect && this._getChance(this.stats.evasion);
