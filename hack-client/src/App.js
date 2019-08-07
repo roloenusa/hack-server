@@ -50,6 +50,25 @@ class App extends React.Component {
   @observable gameData = {};
 
   @observable currentCharacter = {}
+  @observable strength = null;
+  @observable weakness = null;
+  @observable element = null;
+  @observable icon = null;
+
+  @action setStrength = (event) => {
+    this.strength = event.target.value;
+  }
+  @action setWeakness = (event) => {
+    this.weakness = event.target.value;
+  }
+  @action setElement = (event) => {
+    this.element = event.target.value;
+  }
+  @action setIcon = (event) => {
+    console.log(event.target.name);
+    this.icon = event.target.name;
+  }
+
 
   componentWillMount() {
     fetch("http://localhost:3001/gamedata")
@@ -125,9 +144,9 @@ class App extends React.Component {
     );
   }
 
-  optionsMap = (type, selectList) => {
+  optionsMap = (type, selectList, func) => {
     return (
-    <select className="form-control form-control-lg">
+    <select className="form-control form-control-lg" onChange={func}>
       <option>{type}</option>
       {
         selectList.map((e, i) => 
@@ -148,17 +167,17 @@ class App extends React.Component {
 
               <div className="form-group">
               {
-                this.gameData.strengths ? this.optionsMap('strengths', this.gameData.strengths) : ''
+                this.gameData.strengths ? this.optionsMap('strengths', this.gameData.strengths, this.setStrength) : ''
               }
               </div>
               <div className="form-group">
               {
-                this.gameData.weaknesses ? this.optionsMap('weaknesses', this.gameData.weaknesses) : ''
+                this.gameData.weaknesses ? this.optionsMap('weaknesses', this.gameData.weaknesses, this.setWeakness) : ''
               }
               </div>
               <div className="form-group">
               {
-                this.gameData.elements ? this.optionsMap('elements', this.gameData.elements) : ''
+                this.gameData.elements ? this.optionsMap('elements', this.gameData.elements, this.setElement) : ''
               }
               </div>
               <div className="row">
@@ -167,9 +186,7 @@ class App extends React.Component {
                   this.gameData.icons.map((e) => {
                     return (
                       <div className="col-4 char-imgs">
-                        <button>
-                          <img src={"http://localhost:3001/img/characters/" + e + ".png"} />
-                        </button>
+                        <img src={"http://localhost:3001/img/characters/" + e + ".png"} name={e} onClick={this.setIcon} />
                       </div>
                     )
                   })
@@ -177,7 +194,7 @@ class App extends React.Component {
               </div>
 
               <div className="row">
-                <Button onClick="" className="col-12 btn btn-primary">Lock in</Button>
+                <Button onClick={this.lockCharacter} className="col-12 btn btn-primary">Lock in</Button>
               </div>
             </div>
           </div>
@@ -209,6 +226,21 @@ class App extends React.Component {
     }
   }
 
+  lockCharacter = () => {
+    let character = {
+      type: 'character',
+      strength: this.gameData.strengths[this.strength],
+      weakness: this.gameData.weaknesses[this.weakness],
+      element: this.gameData.elements[this.element].title,
+      icon: this.icon,
+    }
+    client.send(JSON.stringify(character));
+    this.strength = null;
+    this.weakness = null;
+    this.element = null;
+    this.icon = null;
+  }
+
   renderGameState = () => {
     if (!this.gameState.gamedata) {
       return this.findBattleUI()
@@ -216,15 +248,13 @@ class App extends React.Component {
       return this.waitingBattleUI();
     } else if (this.gameState.gamedata.state === 1) {
       return this.countdownBattleUI();
-    }
+   } else if (this.gameState.gamedata.state === 2) {
+     return this.createCharacterUI();
+   }
   }
 
   render() {
     const username = this.username;
-    return (
-      <FindBattleScreen />
-    )
-
     return (
       <Container className="container d-flex h-100 flex-column">
         <React.Fragment>
@@ -232,8 +262,7 @@ class App extends React.Component {
             <div className="col align-self-center content">
               <div>
               {
-                // this.renderGameState()
-                this.createCharacterUI()
+                this.renderGameState()
               }
               </div>
             </div>
