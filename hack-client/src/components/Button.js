@@ -10,6 +10,7 @@ const Container = Styled.div`
     background-color: #007DF0;
     color: white;
     cursor: pointer;
+    box-sizing: border-box;
 `;
 
 class Button extends React.Component {
