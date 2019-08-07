@@ -26,24 +26,40 @@ const Content = Styled.div`
   margin: 0 auto;
 `;
 
-const Vs = Styled.span`
-  font-size: 120px;
+const Vs = Styled.div`
+  font-size: 140px;
   color: #FA9B64;
   font-family: 'Rock Salt', cursive;
+  font-weight: bold;
+  letter-spacing: 15px;
 `;
 
-const TextInput = Styled.input`
-  font-size: 20px;
-  padding: 15px;
-  width: 100%;
+const Player = Styled.div`
+  font-size: 45px;
+  color: white;
+  text-transform: uppercase;
 `;
 
-const Error = Styled.p`
-  color: #FF7070;
-  font-size: 16px;
-  text-align:center;
-  margin-top: 10px;
-  margin-bottom: 0;
+const Timer = Styled.div`
+  display: flex;
+  flex-direction: row;
+  margin: 0 auto;
+  padding-top: 90px
+`;
+
+const Text = Styled.div`
+  margin-right: 15px;
+  width: 150px;
+  text-align: right;
+  font-size: 25px;
+  color: rgba(255, 255, 255, 0.47);
+  text-transform:uppercase;
+`;
+
+const Count = Styled.div`
+  font-size: 75px;
+  line-height: 50px;
+  width: 133px;
 `;
 
 @observer
@@ -61,15 +77,13 @@ class FindBattleScreen extends React.Component {
   }
 
   render() {
-    const {onFindBattle} = this.props;
-    let error = this.error ? <Error>Please enter a username you troll</Error> : null;
+    const {playerName,opponentName,text,count} = this.props;
     return (<Container>
-      <Bar><Header>Collabawar Max</Header></Bar>
-      <Content>
-        <TextInput type="text" placeholder="Enter a username" value={this.username} onChange={this.handleUsernameChange}></TextInput>
-        {error}
-        <Button handleClick={this.handleClick}>Find a Battle</Button>
-      </Content>
+      <Bar><Player>{playerName}</Player><Vs>VS</Vs><Player>{opponentName}</Player></Bar>
+        <Timer>
+          <Text>{text}</Text>
+          <Count>{count}</Count>
+        </Timer>
     </Container>)
   }
 }

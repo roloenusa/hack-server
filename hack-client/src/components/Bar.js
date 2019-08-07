@@ -4,11 +4,15 @@ import React from 'react';
 const Container = Styled.div`
     text-align: center;
     background-color: #3C4059;
-    height: 100px;
+    height: 150px;
     width: 100%;
-    margin-top: 200px;
-    margin-bottom: 200px;
+    margin-top: 100px;
+    margin-bottom: 100px;
     padding: 15px;
+    display: flex;
+    align-content: center;
+    align-items: center;
+    justify-content: space-around;
 `;
 
 class Bar extends React.Component {
