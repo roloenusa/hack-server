@@ -7,14 +7,20 @@
     "babel-loader": "^8.0.6",
     "file-loader": "^4.1.0",
     "html-loader": "^0.5.5",
+    "medium-editor": "^5.23.3",
     "mobx": "^5.13.0",
     "mobx-react": "^6.1.1",
     "prop-types": "^15.7.2",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
+    "react-identicons": "^1.1.7",
+    "react-medium-editor": "^1.8.1",
+    "react-scripts": "^3.0.1",
+    "reactstrap": "^8.0.1",
     "styled-components": "^4.3.2",
     "webpack": "^4.37.0",
-    "webpack-dev-server": "^3.7.2"
+    "webpack-dev-server": "^3.7.2",
+    "websocket": "^1.0.29"
   },
   "scripts": {
     "start": "webpack-dev-server --port 3000 --open",
