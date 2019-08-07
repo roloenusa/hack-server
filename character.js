@@ -117,7 +117,7 @@ module.exports = class Character {
     //Calling tick at an interval will run attacks and life cycle for the character
     //tick returns any attack instances.
     _tick(enemies, milliseconds) {
-        const actions = [];
+        const events = [];
         this.lastAttack += milliseconds;
         this.lastHealthTick += milliseconds;
 
@@ -125,7 +125,7 @@ module.exports = class Character {
         if(this.lastAttack >= this.stats.atkspd) {
             this.lastAttack = 0;
             const enemy = this._randomElement(enemies);
-            actions.push(this.sendAttack(enemy));
+            events.push(this.sendAttack(enemy));
         }
 
         //Check if we should regen or bleed
@@ -137,7 +137,7 @@ module.exports = class Character {
             this.hp += healthTick;
         }
 
-        return actions;
+        return events;
     }
 
 };

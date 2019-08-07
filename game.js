@@ -1,12 +1,18 @@
 const gameData = require('./game-data.js');
 const character = require('./character.js');
+
 const CHARACTER_LIMIT = 4;
+const BATTLE_TICK = 50;
+const WAITING_TIME = 10000;
+const TRANSITION_DELAY = 2000;
 
 //Runs the entire game flow
 module.exports = class Game {
     constructor(socket, playername, playerid) {
         this.players = [];
         this.connections = [];
+        this.tick = null;
+        this.finishedHandler = null;
         this._addPlayer(socket, {name: playername, id: playerid});
         this.state = gameData.gamestates.waiting; 
         this.statedata = {};
@@ -24,7 +30,7 @@ module.exports = class Game {
             const connection = this.connections[i];
 
             const state = JSON.stringify({player: player, gamedata: this}, function(key, value){
-                if(key === 'connections') return undefined;
+                if(key === 'connections' || key === 'tick' || key === 'finishedHandler') return undefined;
                 else return value;
             });
 
@@ -80,14 +86,14 @@ module.exports = class Game {
         if(this.totalCharacters === CHARACTER_LIMIT * 2) {
             setTimeout(() => {
                 this._battleStarting();
-            }, 5000);
+            }, TRANSITION_DELAY);
         }
     }
 
     //Start battle waiting countdown
     _battleStarting(){
         this.state = gameData.gamestates.battlestarting;
-        let count = 5;
+        let count = WAITING_TIME / 1000;
         this.statedata = {time: count};
         this._stateChanged();
 
@@ -98,7 +104,7 @@ module.exports = class Game {
             if(count === 0) {
                 setTimeout(() => {
                     this._startBattle();
-                }, 2000);
+                }, TRANSITION_DELAY);
                 clearInterval(timer);
             }
             this._stateChanged();
@@ -109,9 +115,67 @@ module.exports = class Game {
     _startBattle(){
         this.state = gameData.gamestates.battle;
         this._stateChanged();
-        
-        //TODO run the battle
-    }   
+        this.tick = setTimeout(this._battleTick, BATTLE_TICK);
+    }
+    
+    _getAliveCharacters(characters){
+        const alive = [];
+
+        for(let i = 0; i < characters.length; i++) {
+            if(characters[i].alive) alive.push(characters);
+        }
+
+        return alive;
+    }
+
+    _battleTick(){
+        const events = [];
+        const winners = [];
+
+        for(let i = 0; i < this.players.length; i++) {
+            const playerCharacters = this.players[i].characters;
+            const enemyCharacters = this._getAliveCharacters(this._getOpponent(this.players[i]).characters);
+            
+            if(enemyCharacters.length === 0)
+            { 
+                winners.push(this.players[i]);
+            }
+
+            for(let i = 0; i < playerCharacters.length; i++) {
+                const tickEvents = playerCharacters[i]._tick(enemyCharacters, BATTLE_TICK);
+
+                for(let i = 0; i < tickEvents.length; i++) {
+                    events.push(tickEvents[i]);
+                }
+            }
+        }
+
+        if(winners.length > 0) {
+            clearTimeout(this.tick);
+
+            setTimeout(() => {
+                this.statedata = {winners: winners};
+                this.state = gameData.gamestates.end;
+                this._cleanup();
+            },TRANSITION_DELAY);
+        } else {
+            this.statedata = {events: events};
+            this._stateChanged();
+        }
+
+
+    }
+
+    //Cleans up websocket connections and alerts the finishHandler so it can clean up anything
+    _cleanup(){
+        //Call finished handler if there is one
+        if (typeof this.finishedHandler === 'function') this.finishedHandler();
+
+        //Stop listening to websockets
+        for(let i = 0; i < this.connections.length; i++) {
+            this.connections[i].removeAllListeners();
+        }
+    }
 
     //Adds a player to a game and starts the game
     joinGame(socket, playername, playerid) {
@@ -121,7 +185,7 @@ module.exports = class Game {
         this._stateChanged();
         
         //Starts a countdown
-        let count = 5;
+        let count = WAITING_TIME / 1000;
         this.statedata = {time: count};
         this._stateChanged();
 
