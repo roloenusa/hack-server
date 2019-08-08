@@ -1,5 +1,5 @@
 const gameData = require('./game-data.js');
-const character = require('./character.js');
+const Character = require('./character.js');
 
 const CHARACTER_LIMIT = 4;
 const BATTLE_TICK = 50;
@@ -45,7 +45,7 @@ module.exports = class Game {
         this.connections.push(socket);
         this.players.push(player);
        
-        socket.on('message', function(msg) {
+        socket.on('message', (msg) => {
             try {
                 const data = JSON.parse(msg);
                 if(data.type === 'character') this._addCharacter(
@@ -74,7 +74,7 @@ module.exports = class Game {
         if(player.characters.length === CHARACTER_LIMIT) return;
 
         const name = 'Character ' + player.characters.length;
-        const id = playr.id + '-' + player.characters.length;
+        const id = player.id + '-' + player.characters.length;
         const character = new Character(name, id, icon, strength, weakness, element);
         player.characters.push(character);
         this.totalCharacters++;
