@@ -23,12 +23,12 @@ import {
 import { w3cwebsocket as W3CWebSocket } from "websocket";
 import { thisExpression } from '@babel/types';
 
-console.log(process.env.NODE_ENV);
-let url = process.env.NODE_ENV == 'production' ? "wss://p1hack.herokuapp.com" : 'ws://localhost';
+console.log(process.env.DEPLOYMENT);
+let url = process.env.DEPLOYMENT == 'production' ? "wss://p1hack.herokuapp.com" : 'ws://localhost';
 let port = process.env.PORT || 3001;
 let endpoint = `${url}:${port}`
-// const client = new W3CWebSocket(`ws://${endpoint}`);
-const client = new W3CWebSocket(`ws://${endpoint}/charactercreation`);
+// const client = new W3CWebSocket(`${endpoint}`);
+const client = new W3CWebSocket(`${endpoint}/charactercreation`);
 const contentDefaultMessage = "Start writing your document here";
 
 const Container = Styled.div`
