@@ -24,6 +24,7 @@
   },
   "scripts": {
     "start": "webpack-dev-server --port 3000 --open",
+    "heroku-postbuild": "cd hack-client && npm install && npm run build",
     "build": "webpack",
     "test": "jest"
   },

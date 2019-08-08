@@ -17,7 +17,8 @@ app.use((req, res, next) => {
   next(); // Call the next piece of middleware.
 });
 
-app.use(express.static('public'));
+// app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, 'hack-client/build')));
 
 /**
  * Game routes
