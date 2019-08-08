@@ -3,7 +3,7 @@ const Character = require('./character.js');
 
 const CHARACTER_LIMIT = 4;
 const BATTLE_TICK = 50;
-const WAITING_TIME = 10000;
+const WAITING_TIME = 5000;
 const TRANSITION_DELAY = 2000;
 
 //Runs the entire game flow
