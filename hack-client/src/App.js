@@ -56,16 +56,6 @@ class App extends React.Component {
   @observable gameData = {};
 
   componentWillMount() {
-    fetch("/connection")
-    .then(res => res.json())
-    .then(result => {
-      console.log(result);
-      let url = (result.env == 'production') ? "wss://p1hack.herokuapp.com" : 'ws://localhost';
-      let port = result.port;
-      let endpoint = `${url}:${port}`
-      client = new W3CWebSocket(`${endpoint}`);
-    })
-
     fetch("/gamedata")
     .then(res => res.json())
     .then((result) => {
@@ -79,6 +69,16 @@ class App extends React.Component {
         throw error;
       }
     )
+
+    fetch("/connection")
+    .then(res => res.json())
+    .then(result => {
+      console.log(result);
+      let url = (result.env == 'production') ? "wss://p1hack.herokuapp.com" : 'ws://localhost';
+      let port = result.port;
+      let endpoint = `${url}:${port}`
+      client = new W3CWebSocket(`${endpoint}`);
+    })
     .then
     client.onopen = () => {
       console.log('WebSocket Client Connected');
