@@ -61,8 +61,9 @@ class CharacterCreationScreen extends React.Component {
   }
 
   render() {
-    const {lockCharacter, gameData} = this.props;
+    const {lockCharacter, gameData, gameState} = this.props;
     this.gameData = gameData;
+    this.gameState = gameState;
     return (
         <Container>
           <div className="row">

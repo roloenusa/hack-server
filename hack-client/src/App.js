@@ -129,15 +129,16 @@ class App extends React.Component {
   }
 
   render() {
-    // if (!this.gameState.gamedata) {
-    //   return <FindBattleScreen onFindBattle={this.onFindBattle} />
+    if (!this.gameState.gamedata) {
+      return <FindBattleScreen onFindBattle={this.onFindBattle} />
+    }
     // } else if (this.gameState.gamedata.state === 0) {
     //   return <FindingBattleScreen />
     // } else if (this.gameState.gamedata.state === 1) {
     //   return <VsScreen playerName={this.gameState.player.name} opponentName={this.gameState.opponent.name} text="Building starts in" count={this.gameState.gamedata.statedata.time} />
     // } else if (this.gameState.gamedata.state === 2) {
     if (this.gameState.gamedata && this.gameData.strengths) {
-      return <CharacterCreationScreen gameData={this.gameData} lockCharacter={this.lockCharacter} />
+      return <CharacterCreationScreen gameData={this.gameData} lockCharacter={this.lockCharacter} gameState={this.gameState} />
     }
     return <div>hello</div>
   }
