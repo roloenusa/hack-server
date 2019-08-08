@@ -1,5 +1,6 @@
 const gameData = require('./game-data.js');
 const Character = require('./character.js');
+const characterNames = require('./character-names');
 
 const CHARACTER_LIMIT = 4;
 const BATTLE_TICK = 50;
@@ -17,6 +18,7 @@ module.exports = class Game {
         this.state = gameData.gamestates.waiting; 
         this.statedata = {};
         this.totalCharacters = 0;
+        this.poolNames = characterNames.getNames();
         this._stateChanged();   
     }
 
@@ -72,9 +74,9 @@ module.exports = class Game {
         //Dissallow more than the max characters per side
         if(player.characters.length === CHARACTER_LIMIT) return;
 
-        const name = 'Character ' + player.characters.length;
+        // const name = 'Character ' + player.characters.length;
         const id = player.id + '-' + player.characters.length;
-        const character = new Character(name, id, icon, strength, weakness, element);
+        const character = new Character(characterNames.getPrefix() + " " + this.poolNames.pop(), id, icon, strength, weakness, element);
         player.characters.push(character);
         this.totalCharacters++;
         
