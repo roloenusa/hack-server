@@ -19,7 +19,7 @@ app.use((req, res, next) => {
 });
 
 // app.use(express.static('public'));
-app.use(express.static('hack-client'));
+app.use(express.static(__dirname + '/hack-client/dist'));
 
 /**
  * Game routes
@@ -199,7 +199,7 @@ app.get('/charactertest', (req, res) => {
 });
 
 app.get('*', (req, res) => {
-  res.sendFile(path.resolve(__dirname, '/index.html'));
+  res.sendFile(path.resolve(__dirname, '/dist/index.html'));
 });
 
 /**
