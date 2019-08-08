@@ -48,7 +48,7 @@ const Waiting = Styled.div`
 
 const Icons = Styled.div`
   display: grid; 
-  grid-template-columns: 1fr 1fr 1fr; 
+  grid-template-columns: 1fr 1fr 1fr 1fr; 
   grid-template-rows: 1fr 1fr; 
   grid-column-gap: 19px;
   grid-row-gap: 21px; 

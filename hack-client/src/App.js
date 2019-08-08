@@ -22,9 +22,10 @@ import {
 
 import { w3cwebsocket as W3CWebSocket } from "websocket";
 import { thisExpression } from '@babel/types';
+import BattleScreen from './screens/BattleScreen';
 
-// const client = new W3CWebSocket('ws://127.0.0.1:3001');
-const client = new W3CWebSocket('ws://127.0.0.1:3001/charactercreation');
+const client = new W3CWebSocket('ws://127.0.0.1:3001');
+// const client = new W3CWebSocket('ws://127.0.0.1:3001/charactercreation');
 const contentDefaultMessage = "Start writing your document here";
 
 const Container = Styled.div`
@@ -137,8 +138,12 @@ class App extends React.Component {
       return <VsScreen playerName={this.gameState.player.name} opponentName={this.gameState.opponent.name} text="Building starts in" count={this.gameState.gamedata.statedata.time} />
     } else if (this.gameState.gamedata.state === 2) {
       return <CharacterCreationScreen gameData={this.gameData} lockCharacter={this.lockCharacter} gameState={this.gameState} />
+    } else if (this.gameState.gamedata.state === 3) {
+      return <VsScreen playerName={this.gameState.player.name} opponentName={this.gameState.opponent.name} text="Battle starts in" count={this.gameState.gamedata.statedata.time} />
+    } else if (this.gameState.gamedata.state === 4) {
+      return <BattleScreen data={this.gameState.gamedata.statedata.time} />
     }
-    return <div>hello</div>
+    return <div>Battle ENDED</div>
   }
 }
 

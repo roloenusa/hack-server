@@ -34,7 +34,7 @@ module.exports = class Game {
                 else return value;
             });
 
-            console.log('sending state', state);
+            // console.log('sending state', state);
             connection.send(state);
         }
     }
@@ -81,6 +81,13 @@ module.exports = class Game {
         
         this.statedata = {};
         this._stateChanged();
+
+        //If the player is a bot add a character to the opponent
+        if(player.isBot) {
+            setTimeout(()=>{
+                this._addCharacter(this._getOpponent(player), icon, strength, weakness, element);
+            }, 1000);
+        }
 
         //Start the battle waiting after 5 seconds
         if(this.totalCharacters === CHARACTER_LIMIT * 2) {
@@ -129,6 +136,7 @@ module.exports = class Game {
     }
 
     _battleTick(){
+        console.log('Battle tick');
         const events = [];
         const winners = [];
 
@@ -178,8 +186,8 @@ module.exports = class Game {
     }
 
     //Adds a player to a game and starts the game
-    joinGame(socket, playername, playerid) {
-        this._addPlayer(socket, {name: playername, id: playerid});
+    joinGame(socket, playername, playerid, isBot) {
+        this._addPlayer(socket, {name: playername, id: playerid, isBot: isBot});
 
         this.state = gameData.gamestates.starting;
         this._stateChanged();

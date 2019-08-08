@@ -51,7 +51,7 @@ const joinGame = function(client, data) {
     //Find an open game
     for(let i = 0; i < games.length; i++) {
       if(games[i].canJoinGame()){
-        games[i].joinGame(client, data.username, userid);
+        games[i].joinGame(client, data.username, userid, data.bot);
         return games[i];
       }
     }
