@@ -4,6 +4,7 @@ import { action, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import Bar from '../components/Bar';
 import Button from '../components/Button';
+import SmallCharacter from '../components/SmallCharacter';
 
 const Container = Styled.div`
 `;
@@ -53,7 +54,7 @@ class CharacterCreationScreen extends React.Component {
       <option>{type}</option>
       {
         selectList.map((e, i) => 
-          <option value={i}>{e.title}</option>
+          <option value={i} key={Math.random()}>{e.title}</option>
         )
       }
     </select>
@@ -108,24 +109,29 @@ class CharacterCreationScreen extends React.Component {
             <div className="col">
               <h2>Your Team</h2>
               {
-                !this.gameState.player ? '' : this.gameState.player.characters.map((e) => {
-                  <div className="row">
+                !this.gameState.player ? '' : this.gameState.player.characters.map((e) =>
+                  <div className="row" key={e.id}>
                     <div className="col-3">
                       <img src={"http://localhost:3001/img/characters/" + e.icon + ".png"} />
                     </div>
                     <div className="col-3">
-                      <div>THE ELEMENT</div>
-                      <div>THE NAME</div>
-                      <div>THE STRENGTH</div>
-                      <div>THE THE WEAKNESS</div>
+                      <div>{e.element}</div>
+                      <div>{e.name}</div>
+                      <div>{e.strength.title}</div>
+                      <div>{e.weakness.title}</div>
                     </div>
                   </div>
-                })
+                )
               }
             </div>
 
             <div className="col">
-              <h2>{"BLAH"}'s Team</h2>
+              <h2>{this.gameState.opponent.name}'s Team</h2>
+              {
+                !this.gameState.opponent ? '' : this.gameState.opponent.characters.map((e) => {
+                  return (<SmallCharacter character={e} key={e.id + Math.random()} />)
+                })
+              }
             </div>
           </div>
         </Container>

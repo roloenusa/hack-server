@@ -23,8 +23,8 @@ import {
 import { w3cwebsocket as W3CWebSocket } from "websocket";
 import { thisExpression } from '@babel/types';
 
-const client = new W3CWebSocket('ws://127.0.0.1:3001');
-const client2 = new W3CWebSocket('ws://127.0.0.1:3001/test');
+// const client = new W3CWebSocket('ws://127.0.0.1:3001');
+const client = new W3CWebSocket('ws://127.0.0.1:3001/charactercreation');
 const contentDefaultMessage = "Start writing your document here";
 
 const Container = Styled.div`
@@ -131,13 +131,11 @@ class App extends React.Component {
   render() {
     if (!this.gameState.gamedata) {
       return <FindBattleScreen onFindBattle={this.onFindBattle} />
-    }
-    // } else if (this.gameState.gamedata.state === 0) {
-    //   return <FindingBattleScreen />
-    // } else if (this.gameState.gamedata.state === 1) {
-    //   return <VsScreen playerName={this.gameState.player.name} opponentName={this.gameState.opponent.name} text="Building starts in" count={this.gameState.gamedata.statedata.time} />
-    // } else if (this.gameState.gamedata.state === 2) {
-    if (this.gameState.gamedata && this.gameData.strengths) {
+    } else if (this.gameState.gamedata.state === 0) {
+      return <FindingBattleScreen />
+    } else if (this.gameState.gamedata.state === 1) {
+      return <VsScreen playerName={this.gameState.player.name} opponentName={this.gameState.opponent.name} text="Building starts in" count={this.gameState.gamedata.statedata.time} />
+    } else if (this.gameState.gamedata.state === 2) {
       return <CharacterCreationScreen gameData={this.gameData} lockCharacter={this.lockCharacter} gameState={this.gameState} />
     }
     return <div>hello</div>
