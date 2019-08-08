@@ -141,7 +141,7 @@ class App extends React.Component {
     } else if (this.gameState.gamedata.state === 3) {
       return <VsScreen playerName={this.gameState.player.name} opponentName={this.gameState.opponent.name} text="Battle starts in" count={this.gameState.gamedata.statedata.time} />
     } else if (this.gameState.gamedata.state === 4) {
-      return <BattleScreen data={this.gameState.gamedata.statedata.time} />
+      return <BattleScreen gameState={this.gameState} />
     }
     return <div>Battle ENDED</div>
   }

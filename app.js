@@ -175,7 +175,7 @@ app.ws('/charactercreation', (ws, req) => {
       }]
     },
     "gamedata": {
-      "state": 2,
+      "state": 4,
       "statedata": {},
       "totalCharacters": 1
     }

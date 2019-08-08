@@ -122,7 +122,7 @@ module.exports = class Game {
     _startBattle(){
         this.state = gameData.gamestates.battle;
         this._stateChanged();
-        this.tick = setTimeout(this._battleTick, BATTLE_TICK);
+        this.tick = setTimeout(() => {this._battleTick()}, BATTLE_TICK);
     }
     
     _getAliveCharacters(characters){
