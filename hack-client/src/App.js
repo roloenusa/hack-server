@@ -23,7 +23,8 @@ import {
 import { w3cwebsocket as W3CWebSocket } from "websocket";
 import { thisExpression } from '@babel/types';
 
-let url = process.env.NODE_ENV == 'production' ? "p1hack.herokuapp.com" : localhost;
+console.log(process.env.NODE_ENV);
+let url = process.env.NODE_ENV == 'production' ? "p1hack.herokuapp.com" : 'localhost';
 let port = process.env.PORT || 3001;
 let endpoint = `ws://${url}:${port}`
 // const client = new W3CWebSocket(`ws://${endpoint}`);
