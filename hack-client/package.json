@@ -24,8 +24,9 @@
     "websocket": "^1.0.29"
   },
   "scripts": {
+    "prebuild": "echo I run before the build script",
     "start": "webpack-dev-server --port 3000 --open",
-    "build": "webpack && webpack -p",
+    "build": "webpack",
     "test": "jest"
   },
   "browserslist": {
