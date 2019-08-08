@@ -43,6 +43,7 @@ app.ws('/', function(ws, req) {
   });
 });
 
+
 //Creates a user id and joins a game or creates a new game if there are none to join
 const joinGame = function(client, data) {
     const userid = uuid++;
@@ -130,7 +131,48 @@ app.ws('/charactercreation', (ws, req) => {
     "opponent": {
       "name": "asdf",
       "id": 0,
-      "characters": []
+      "characters": [{
+        "id": "1-0",
+        "lastAttack": 0,
+        "lastHealthTick": 0,
+        "stats": {
+          "maxhp": 600,
+          "dmg": 40,
+          "evasion": 0,
+          "reflect": 0,
+          "critdmg": 400,
+          "critrate": 15,
+          "lifesteal": 0,
+          "regen": 0,
+          "bleed": 0,
+          "atkspd": 1000,
+          "dmgreduction": 0,
+          "amplify": 0
+        },
+        "element": "Water",
+        "name": "Character 0",
+        "icon": "5",
+        "strength": {
+          "title": "+200% crit dmg",
+          "effect": {
+            "property": "critdmg",
+            "amount": 200
+          }
+        },
+        "weakness": {
+          "title": "-50% Max HP",
+          "effect": {
+            "property": "maxhp",
+            "amount": -50,
+            "multiply": true
+          }
+        },
+        "totals": {
+          "dmg": 0
+        },
+        "hp": 600,
+        "alive": true
+      }]
     },
     "gamedata": {
       "state": 2,

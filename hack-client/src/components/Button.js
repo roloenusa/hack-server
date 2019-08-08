@@ -11,6 +11,11 @@ const Container = Styled.div`
     color: white;
     cursor: pointer;
     box-sizing: border-box;
+    transition: background-color 0.5s ease;
+    
+    &:hover {
+      background-color: #4ba9ff;
+    }
 `;
 
 class Button extends React.Component {
