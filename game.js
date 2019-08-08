@@ -122,7 +122,7 @@ module.exports = class Game {
     _startBattle(){
         this.state = gameData.gamestates.battle;
         this._stateChanged();
-        this.tick = setTimeout(() => {this._battleTick()}, BATTLE_TICK);
+        this.tick = setInterval(() => {this._battleTick()}, BATTLE_TICK);
     }
     
     _getAliveCharacters(characters){
@@ -136,11 +136,12 @@ module.exports = class Game {
     }
 
     _battleTick(){
-        console.log('Battle tick');
+        console.log(`Battle tick on players: ${this.players.length}`);
         const events = [];
         const winners = [];
 
         for(let i = 0; i < this.players.length; i++) {
+          console.log(`Battle tick: ${this.players[i].name}`);
             const playerCharacters = this.players[i].characters;
             const enemyCharacters = this._getAliveCharacters(this._getOpponent(this.players[i]).characters);
             
@@ -149,14 +150,16 @@ module.exports = class Game {
                 winners.push(this.players[i]);
             }
 
-            for(let i = 0; i < playerCharacters.length; i++) {
-                const tickEvents = playerCharacters[i]._tick(enemyCharacters, BATTLE_TICK);
+            for(let l = 0; l < playerCharacters.length; l++) {
+                const tickEvents = playerCharacters[l]._tick(enemyCharacters, BATTLE_TICK);
 
-                for(let i = 0; i < tickEvents.length; i++) {
-                    events.push(tickEvents[i]);
+                for(let k = 0; k < tickEvents.length; k++) {
+                    events.push(tickEvents[k]);
                 }
             }
         }
+
+        console.log(events);
 
         if(winners.length > 0) {
             clearTimeout(this.tick);

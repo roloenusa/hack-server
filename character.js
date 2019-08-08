@@ -129,6 +129,7 @@ module.exports = class Character {
         this.lastHealthTick += milliseconds;
 
         //Check if we should attack
+        console.log(`attack speed: ${this.lastAttack } >= ${this.stats.atkspd}`);
         if(this.lastAttack >= this.stats.atkspd) {
             this.lastAttack = 0;
             const enemy = this._randomElement(enemies);
