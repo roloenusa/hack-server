@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "startd": "nodemon app.js",
-    "heroku-postbuild": "cd hack-client && npm install && npm run build"
+    "heroku-postbuild": "cd hack-client && webpack -p"
   },
   "keywords": [],
   "author": "",
