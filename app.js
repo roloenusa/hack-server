@@ -79,6 +79,71 @@ app.ws('/test', function(ws, req) {
   });
 });
 
+app.ws('/charactercreation', (ws, req) => {
+  let test = {
+    "player": {
+      "name": "zatch",
+      "id": 1,
+      "characters": [{
+        "id": "1-0",
+        "lastAttack": 0,
+        "lastHealthTick": 0,
+        "stats": {
+          "maxhp": 600,
+          "dmg": 40,
+          "evasion": 0,
+          "reflect": 0,
+          "critdmg": 400,
+          "critrate": 15,
+          "lifesteal": 0,
+          "regen": 0,
+          "bleed": 0,
+          "atkspd": 1000,
+          "dmgreduction": 0,
+          "amplify": 0
+        },
+        "element": "Water",
+        "name": "Character 0",
+        "icon": "12",
+        "strength": {
+          "title": "+200% crit dmg",
+          "effect": {
+            "property": "critdmg",
+            "amount": 200
+          }
+        },
+        "weakness": {
+          "title": "-50% Max HP",
+          "effect": {
+            "property": "maxhp",
+            "amount": -50,
+            "multiply": true
+          }
+        },
+        "totals": {
+          "dmg": 0
+        },
+        "hp": 600,
+        "alive": true
+      }]
+    },
+    "opponent": {
+      "name": "asdf",
+      "id": 0,
+      "characters": []
+    },
+    "gamedata": {
+      "state": 2,
+      "statedata": {},
+      "totalCharacters": 1
+    }
+  }
+  ws.on('message', function(msg) {
+    console.log(`${req.originalUrl}: ${msg}`)
+    ws.send(JSON.stringify(test));
+  });
+})
+
 app.get('/charactertest', (req, res) => {
   const c1 = new character('Character 1', 'p1c1', '', gameData.strengths[0], gameData.weaknesses[0], 'Earth');
   const c2 = new character('Character 2', 'p2c2', '', gameData.strengths[1], gameData.weaknesses[1], 'Water');
