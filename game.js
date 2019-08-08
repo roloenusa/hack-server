@@ -34,7 +34,6 @@ module.exports = class Game {
                 else return value;
             });
 
-            // console.log('sending state', state);
             connection.send(state);
         }
     }
@@ -129,7 +128,7 @@ module.exports = class Game {
         const alive = [];
 
         for(let i = 0; i < characters.length; i++) {
-            if(characters[i].alive) alive.push(characters);
+            if(characters[i].alive) alive.push(characters[i]);
         }
 
         return alive;
@@ -141,13 +140,14 @@ module.exports = class Game {
         const winners = [];
 
         for(let i = 0; i < this.players.length; i++) {
-          console.log(`Battle tick: ${this.players[i].name}`);
+            console.log(`Battle tick: ${this.players[i].name}`);
             const playerCharacters = this.players[i].characters;
             const enemyCharacters = this._getAliveCharacters(this._getOpponent(this.players[i]).characters);
             
             if(enemyCharacters.length === 0)
             { 
-                winners.push(this.players[i]);
+                winners.push(this.players[i].id);
+                continue;
             }
 
             for(let l = 0; l < playerCharacters.length; l++) {
@@ -160,16 +160,26 @@ module.exports = class Game {
         }
 
         console.log(events);
+        for (let i = 0; i < this.players.length; i++) {
+          for (let l = 0; l < this.players[i].characters.length; l++) {
+            console.log(`player: ${this.players[i].name}, hp: ${this.players[i].characters[l].hp}`);
+          }
+        }
 
+        console.log(`winners: ${winners.length}`);
         if(winners.length > 0) {
             clearTimeout(this.tick);
 
             setTimeout(() => {
+                console.log('=== winner found');
                 this.statedata = {winners: winners};
                 this.state = gameData.gamestates.end;
+                this._stateChanged();
                 this._cleanup();
             },TRANSITION_DELAY);
-        } else {
+        }
+
+        if (events.length > 0) {
             this.statedata = {events: events};
             this._stateChanged();
         }

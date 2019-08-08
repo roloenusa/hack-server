@@ -96,7 +96,10 @@ module.exports = class Character {
         //Reduce hp if this wasn't evaded
         if(!didEvade) this.hp -= dmg;
 
-        if(this.hp <= 0) this.alive = false;
+        if(this.hp <= 0) {
+          this.hp = 0;
+          this.alive = false;
+        } 
 
         return { type: 'atk', from: enemy.id, to: this.id, didEvade: didEvade, dmg: dmg, reflected: reflected }
     }
@@ -129,7 +132,6 @@ module.exports = class Character {
         this.lastHealthTick += milliseconds;
 
         //Check if we should attack
-        console.log(`attack speed: ${this.lastAttack } >= ${this.stats.atkspd}`);
         if(this.lastAttack >= this.stats.atkspd) {
             this.lastAttack = 0;
             const enemy = this._randomElement(enemies);

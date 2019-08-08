@@ -8,7 +8,7 @@ module.exports = {
         'end': 5
     },
     basestats : {
-        maxhp: 1200,
+        maxhp: 2000,
         dmg: 40,
         evasion: 0,
         reflect: 0,
@@ -17,7 +17,7 @@ module.exports = {
         lifesteal: 0,
         regen: 0,
         bleed: 0,
-        atkspd: 1000,
+        atkspd: 1500,
         dmgreduction: 0,
         amplify: 0,
     },
@@ -88,7 +88,7 @@ module.exports = {
         },
         {
             title: 'Bleed 2% hp/sec',
-            effect: { property: 'bleed', amount: 50 }
+            effect: { property: 'bleed', amount: 2 }
         },
         {
             title: '-50% Max HP',

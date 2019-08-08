@@ -50,7 +50,7 @@ class BattleCharacter extends React.Component {
     console.log('bb',character);
     return (
       <Container>
-        <HpBar><Hp width={((character.hp * 100) / character.maxhp) || 100}></Hp></HpBar>
+        <HpBar><Hp width={((character.hp * 100) / character.stats.maxhp)}></Hp></HpBar>
         <Icon style={{backgroundImage: 'url(' + 'http://localhost:3001/img/characters/' + character.icon + '.png' + ')'}} flip={alignRight} />
         <Name>{character.name}</Name>
       </Container>
