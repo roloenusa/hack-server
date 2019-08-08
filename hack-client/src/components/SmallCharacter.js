@@ -78,7 +78,7 @@ class SmallCharacter extends React.Component {
       )
     }
 
-    const icon = <Icon style={{backgroundImage: 'url(' + 'http://localhost:3001/img/characters/' + character.icon + '.png' + ')'}} />
+    const icon = <Icon style={{backgroundImage: 'url(' + '/img/characters/' + character.icon + '.png' + ')'}} />
     const left = alignRight ? null : icon;
     const right = alignRight ? icon : null;
     
