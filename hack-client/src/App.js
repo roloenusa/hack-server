@@ -23,12 +23,11 @@ import {
 import { w3cwebsocket as W3CWebSocket } from "websocket";
 import { thisExpression } from '@babel/types';
 
-console.log(process.env.NODE_ENV);
+
 let url = "wss://p1hack.herokuapp.com";
-let port = process.env.PORT || 3001;
-let endpoint = `${url}:${port}`
-// const client = new W3CWebSocket(`${endpoint}`);
-const client = new W3CWebSocket(`${endpoint}/charactercreation`);
+let client = null;
+// let client = new W3CWebSocket(`${endpoint}`);
+// const client = new W3CWebSocket(`${endpoint}/charactercreation`);
 const contentDefaultMessage = "Start writing your document here";
 
 const Container = Styled.div`
@@ -57,7 +56,17 @@ class App extends React.Component {
   @observable gameData = {};
 
   componentWillMount() {
-    fetch("http://localhost:3001/gamedata")
+    fetch("/connection")
+    .then(res => res.json())
+    .then(result => {
+      console.log(result);
+      let url = (result.env == 'production') ? "wss://p1hack.herokuapp.com" : 'ws://localhost';
+      let port = result.port;
+      let endpoint = `${url}:${port}`
+      client = new W3CWebSocket(`${endpoint}`);
+    })
+
+    fetch("/gamedata")
     .then(res => res.json())
     .then((result) => {
         console.log(result);
