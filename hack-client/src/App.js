@@ -24,6 +24,8 @@ import { w3cwebsocket as W3CWebSocket } from "websocket";
 import { thisExpression } from '@babel/types';
 
 console.log(process.env.DEPLOYMENT);
+console.log(process.env.P1SOCKET);
+console.log(process.env);
 let url = process.env.DEPLOYMENT == 'production' ? "wss://p1hack.herokuapp.com" : 'ws://localhost';
 let port = process.env.PORT || 3001;
 let endpoint = `${url}:${port}`
