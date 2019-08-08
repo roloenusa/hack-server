@@ -25,7 +25,7 @@
   },
   "scripts": {
     "start": "webpack-dev-server --port 3000 --open",
-    "build": "webpack",
+    "build": "webpack && webpack -p",
     "test": "jest"
   },
   "browserslist": {
