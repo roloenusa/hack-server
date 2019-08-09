@@ -64,7 +64,7 @@ class FindBattleScreen extends React.Component {
     const {onFindBattle} = this.props;
     let error = this.error ? <Error>Please enter a username you troll</Error> : null;
     return (<Container>
-      <Bar><Header>Collabawar Max</Header></Bar>
+      <Bar><Header>Office Battle Max</Header></Bar>
       <Content>
         <TextInput type="text" placeholder="Enter a username" value={this.username} onChange={this.handleUsernameChange}></TextInput>
         {error}
