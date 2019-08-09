@@ -126,7 +126,7 @@ class LoadBattleScreen extends React.Component {
         {
           playerCharacters.map((e) => {
             return (
-              <SmallCharacter character={e} key={'p' + e.id} index={index++} alignRight={true} />
+              <SmallCharacter character={e} key={'p' + e.id} alignRight={true} />
             )
           })
         }
@@ -143,7 +143,7 @@ class LoadBattleScreen extends React.Component {
         {
           opponentCharacters.map((e) => {
             return (
-              <SmallCharacter character={e} key={'o' + e.id} index={index++} alignRight={true} />
+              <SmallCharacter character={e} key={'o' + e.id} alignRight={true} />
             )
           })
         }

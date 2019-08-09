@@ -1,7 +1,20 @@
 import Styled from 'styled-components';
 import React from 'react';
+import { observer } from 'mobx-react';
+import pose from 'react-pose';
+import { observable } from 'mobx';
 
-const Container = Styled.div`
+const Box = pose.div({
+  init: { opacity: 0},
+  fadeIn: { 
+    opacity: 1,
+    transition: {
+      duration: 4000,
+    }
+  }
+});
+
+const Container = Styled(Box)`
     text-align: center;
     width: 100%;
     margin-top: 10px;
@@ -68,7 +81,20 @@ const numericStrings = {
   3: 'Fourth'
 }
 
+
+
+@observer
 class SmallCharacter extends React.Component {
+  @observable pose = 'init';
+
+  loadPose() {
+    if (this.pose == 'fadeIn') return;
+
+    setTimeout(() => {
+      this.pose = 'fadeIn';
+    }, 100)
+  }
+
   render() {
     const {character, alignRight,index} = this.props;
     
@@ -81,9 +107,9 @@ class SmallCharacter extends React.Component {
     const icon = <Icon style={{backgroundImage: 'url(' + 'http://localhost:3001/img/characters/' + character.icon + '.png' + ')'}} />
     const left = alignRight ? null : icon;
     const right = alignRight ? icon : null;
-    
+    this.loadPose();
     return (
-      <Container>
+      <Container pose={this.pose}>
             {left}
             <Overview>
             <Element>{character.element}</Element>
