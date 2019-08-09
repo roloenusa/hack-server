@@ -3,7 +3,7 @@ import React from 'react';
 
 const Container = Styled.div`
     text-align: center;
-    background-color: #3C4059;
+    background-color: ${props => props.color};
     height: 150px;
     width: 100%;
     margin-top: 100px;
@@ -17,9 +17,10 @@ const Container = Styled.div`
 
 class Bar extends React.Component {
   render() {
-    const {children} = this.props;
+    const {children, color} = this.props;
+    let barColor = color ? color : '#3C4059';
     return (
-      <Container>{children}</Container>
+      <Container color={barColor}>{children}</Container>
     )
   }
 }

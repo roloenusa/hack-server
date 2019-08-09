@@ -7,6 +7,7 @@ import FindBattleScreen from './screens/FindBattleScreen';
 import FindingBattleScreen from './screens/FindingBattleScreen';
 import VsScreen from './screens/VsScreen';
 import CharacterCreationScreen from './screens/CharacterCreationScreen';
+import EndScreen from './screens/EndScreen';
 
 
 import Identicon from 'react-identicons';
@@ -97,34 +98,6 @@ class App extends React.Component {
     this.gameData = data
   }
 
-  findBattleUI = () => {
-    return (
-      <div>
-        <H1>
-          Collabwar
-        </H1>
-        <div>
-          <input className="form-control form-control-lg" placeholder="enter a username" onChange={this.setUsername}/>
-        </div>
-        <Button onClick={this.findBattle} className="btn btn-primary">
-          Find a battle
-        </Button>
-      </div>
-    );
-  }
-
-  waitingBattleUI = () => {
-    return (
-      <h1>Waiting...</h1>
-    );
-  }
-
-  countdownBattleUI = () => {
-    return (
-      <h1>Join... {this.gameState.gamedata.statedata.time}</h1>
-    );
-  }
-
   lockCharacter = (character) => {
     client.send(JSON.stringify(character));
   }
@@ -143,7 +116,7 @@ class App extends React.Component {
     } else if (this.gameState.gamedata.state === 4) {
       return <BattleScreen gameState={this.gameState} />
     }
-    return <div>Battle ENDED</div>
+    return <EndScreen won={this.gameState.gamedata.statedata.winners[0] === this.gameState.player.id} draw={this.gameState.gamedata.statedata.winners.length > 1} opponent={this.gameState.opponent.name} characters={this.gameState.player.characters} />
   }
 }
 

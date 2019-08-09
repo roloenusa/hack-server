@@ -69,8 +69,8 @@ module.exports = {
             effect: { property: 'regen', amount: 2.5 }
         },
         {
-            title: '+50% hp',
-            effect: { property: 'maxhp', amount: 50, multiply: true }
+            title: '+25% hp',
+            effect: { property: 'maxhp', amount: 25, multiply: true }
         },
         {
             title: '+10% crit rate',
@@ -91,8 +91,8 @@ module.exports = {
             effect: { property: 'bleed', amount: 2 }
         },
         {
-            title: '-50% Max HP',
-            effect: { property: 'maxhp', amount: -50, multiply: true }
+            title: '-25% Max HP',
+            effect: { property: 'maxhp', amount: -25, multiply: true }
         },
         {
             title: '-25% dmg',

@@ -130,6 +130,7 @@ module.exports = class Character {
     //Calling tick at an interval will run attacks and life cycle for the character
     //tick returns any attack instances.
     _tick(enemies, milliseconds) {
+        if(!this.alive) return [];
         const events = [];
         this.lastAttack += milliseconds;
         this.lastHealthTick += milliseconds;

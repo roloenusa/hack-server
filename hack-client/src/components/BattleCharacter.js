@@ -45,12 +45,14 @@ const Name = Styled.div`
 
 class BattleCharacter extends React.Component {
   render() {
-    const {character, alignRight} = this.props;
+    const {character, alignRight, noHp} = this.props;
     
+    const hpBar = noHp ? null : <HpBar><Hp width={((character.hp * 100) / character.stats.maxhp)}></Hp></HpBar>;
+
     console.log('bb',character);
     return (
       <Container>
-        <HpBar><Hp width={((character.hp * 100) / character.stats.maxhp)}></Hp></HpBar>
+        {hpBar}
         <Icon style={{backgroundImage: 'url(' + 'http://localhost:3001/img/characters/' + character.icon + '.png' + ')'}} flip={alignRight} />
         <Name>{character.name}</Name>
       </Container>

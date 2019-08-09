@@ -227,33 +227,13 @@
             }
         }
 
-        #block {
-          position: absolute;
-          background-color: rgb(235, 84, 20);
-          border-radius: 45px;
-          left: 50px;
-          width: 90px;
-          height: 90px;
-          margin: 5px;
-        }
-
-        #block2 {
-          position: absolute;
-          background-color: rgb(235, 84, 20);
-          border-radius: 45px;
-          left: 520px;
-          top: 300px;
-          width: 90px;
-          height: 90px;
-          margin: 5px;
-        }
-
         .bullet {
           position: absolute;
           background-image: url("http://localhost:3001/img/bullet.png");
           border-radius: 45px;
           width: 15px;
           height: 15px;
+          display: none;
         }
 
         .bleed {
@@ -262,6 +242,7 @@
           border-radius: 45px;
           width: 25px;
           height: 25px;
+          display: none;
         }
 
         .regen {
@@ -270,6 +251,7 @@
           border-radius: 45px;
           width: 25px;
           height: 25px;
+          display: none;
         }
 
         .hit {
@@ -280,6 +262,7 @@
           border-radius: 45px;
           width: 15px;
           height: 15px;
+          display: none;
         }
         .crit {
           background-image: url("http://localhost:3001/img/crit.png") !important;
@@ -289,14 +272,13 @@
           border-radius: 45px;
           width: 100px;
           height: 100px;
+          display: none;
         }
     </style>
 
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
-    <!-- <div id="block"></div>
-    <div id="block2"></div> -->
     <div id="root" class="app-root"></div>
     <script>
       function shootBullet(from, to, isCrit) {
