@@ -6,6 +6,7 @@ import Editor from 'react-medium-editor';
 import FindBattleScreen from './screens/FindBattleScreen';
 import FindingBattleScreen from './screens/FindingBattleScreen';
 import VsScreen from './screens/VsScreen';
+import LoadBattleScreen from './screens/LoadBattleScreen';
 import CharacterCreationScreen from './screens/CharacterCreationScreen';
 import EndScreen from './screens/EndScreen';
 
@@ -112,7 +113,13 @@ class App extends React.Component {
     } else if (this.gameState.gamedata.state === 2) {
       return <CharacterCreationScreen gameData={this.gameData} lockCharacter={this.lockCharacter} gameState={this.gameState} />
     } else if (this.gameState.gamedata.state === 3) {
-      return <VsScreen playerName={this.gameState.player.name} opponentName={this.gameState.opponent.name} text="Battle starts in" count={this.gameState.gamedata.statedata.time} />
+      return <LoadBattleScreen
+        playerName={this.gameState.player.name} 
+        opponentName={this.gameState.opponent.name}
+        text="Battle starts in" count={this.gameState.gamedata.statedata.time}
+        opponentCharacters={this.gameState.opponent.characters}
+        playerCharacters={this.gameState.player.characters}
+        />
     } else if (this.gameState.gamedata.state === 4) {
       return <BattleScreen gameState={this.gameState} />
     }
