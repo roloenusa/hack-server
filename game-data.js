@@ -65,8 +65,8 @@ module.exports = {
             effect: { property: 'lifesteal', amount: 25 }
         },
         {
-            title: '+5% hp regen/sec',
-            effect: { property: 'regen', amount: 5 }
+            title: '+2.5% hp regen/sec',
+            effect: { property: 'regen', amount: 2.5 }
         },
         {
             title: '+50% hp',

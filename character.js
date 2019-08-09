@@ -52,7 +52,10 @@ module.exports = class Character {
         
         //Caculate crit chance and crit damage
         const didCrit = this._getChance(this.stats.critrate);
-        if(didCrit) dmg += this._percentOf(this.stats.critdmg, dmg);
+        if(didCrit) {
+          console.log(`didCrit: ${didCrit}`);
+          dmg += this._percentOf(this.stats.critdmg, dmg);
+        }
 
         const adjustedAttack = enemy.receiveAttack({ from: this, dmg: dmg, didCrit: didCrit });
 
@@ -101,7 +104,7 @@ module.exports = class Character {
           this.alive = false;
         } 
 
-        return { type: 'atk', from: enemy.id, to: this.id, didEvade: didEvade, dmg: dmg, reflected: reflected }
+        return { type: 'atk', from: enemy.id, to: this.id, didEvade: didEvade, dmg: dmg, reflected: reflected, didCrit: attack.didCrit }
     }
 
     //give a percent and an amount returns a percent of that number
@@ -111,12 +114,12 @@ module.exports = class Character {
     }
 
     //given a percent, returns true or false to indicate a chance happening
-    //example _getChance(20) will return true 20% of the time
+    //example receiveAttack(20) will return true 20% of the time
     _getChance(percent) {
         if(percent >= 100) return true;
         if(percent <= 0) return false;
         const rand = Math.random() * 100;
-        return percent < rand;
+        return rand <= percent;
     }
 
     //Returns a random element from a provided array
@@ -140,11 +143,22 @@ module.exports = class Character {
 
         //Check if we should regen or bleed
         if(this.lastHealthTick >= 1000) {
+            this.lastHealthTick = 0;
             const bleed = this._percentOf(this.stats.bleed, this.stats.maxhp);
             const regen = this._percentOf(this.stats.regen, this.stats.maxhp);
 
             const healthTick = regen - bleed;
             this.hp += healthTick;
+
+            if (this.hp > this.stats.maxhp) this.hp = this.stats.maxhp;
+
+            if (bleed > 0) {
+              events.push({to: this.id, type: 'bleed'});
+            }
+
+            if (regen > 0) {
+              events.push({to: this.id, type: 'regen'});
+            }
         }
 
         return events;

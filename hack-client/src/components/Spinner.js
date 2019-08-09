@@ -3,7 +3,7 @@ import React from 'react';
 class Button extends React.Component {
   render() {
     return (
-        <div class="la-fire la-3x">
+        <div className="la-fire la-3x">
             <div></div>
             <div></div>
             <div></div>

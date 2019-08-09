@@ -37,6 +37,23 @@ const Col = Styled.div`
 
 @observer
 class BattleScreen extends React.Component {
+  componentDidUpdate() {
+    let gameState = this.props.gameState;
+
+    if (gameState.gamedata.statedata.events) {
+      for (let i = 0; i < gameState.gamedata.statedata.events.length; i++) {
+        let event = gameState.gamedata.statedata.events[i];
+        if (event.type === 'bleed') {
+          showBleed('c' + event.to);
+        } else if (event.type ==='regen') {
+          showRegen('c' + event.to);
+        } else if (event.type ==='atk') {
+          shootBullet('c' + event.from, 'c' + event.to, event.didCrit);
+        }
+      }
+    }
+  }
+
   render() {
     const {gameState} = this.props;
     return (<Container>
@@ -45,7 +62,9 @@ class BattleScreen extends React.Component {
       {
             gameState.player.characters.map((e) => {
               return (
-                <BattleCharacter character={e} key={e.id} />
+                <div id={'c' + e.id}>
+                  <BattleCharacter character={e} key={e.id} />
+                </div>
               )
             })
       }
@@ -54,7 +73,9 @@ class BattleScreen extends React.Component {
       {
             gameState.opponent.characters.map((e) => {
               return (
-                <BattleCharacter character={e} key={e.id} alignRight={true} />
+                <div id={'c' + e.id}>
+                  <BattleCharacter character={e} key={e.id} alignRight={true} id={e.id} />
+                </div>
               )
             })
       }

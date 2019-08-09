@@ -12,6 +12,8 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
 
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+
     <meta name="theme-color" content="#000000" />
     <!--
       manifest.json provides metadata used when your web app is installed on a
@@ -224,11 +226,140 @@
                         transform: translateY(-212.5%) translateX(-50%) rotate(45deg) scale(0);
             }
         }
+
+        #block {
+          position: absolute;
+          background-color: rgb(235, 84, 20);
+          border-radius: 45px;
+          left: 50px;
+          width: 90px;
+          height: 90px;
+          margin: 5px;
+        }
+
+        #block2 {
+          position: absolute;
+          background-color: rgb(235, 84, 20);
+          border-radius: 45px;
+          left: 520px;
+          top: 300px;
+          width: 90px;
+          height: 90px;
+          margin: 5px;
+        }
+
+        .bullet {
+          position: absolute;
+          background-image: url("http://localhost:3001/img/bullet.png");
+          border-radius: 45px;
+          width: 15px;
+          height: 15px;
+        }
+
+        .bleed {
+          position: absolute;
+          background-image: url("http://localhost:3001/img/bleed.png");
+          border-radius: 45px;
+          width: 25px;
+          height: 25px;
+        }
+
+        .regen {
+          position: absolute;
+          background-image: url("http://localhost:3001/img/regen.png");
+          border-radius: 45px;
+          width: 25px;
+          height: 25px;
+        }
+
+        .hit {
+          position: absolute;
+          background-image: url("http://localhost:3001/img/hit.png");
+          background-size: contain;
+          transform: translate(-50%, -50%);
+          border-radius: 45px;
+          width: 15px;
+          height: 15px;
+        }
+        .crit {
+          background-image: url("http://localhost:3001/img/crit.png") !important;
+          position: absolute;
+          background-size: contain;
+          transform: translate(-50%, -50%);
+          border-radius: 45px;
+          width: 100px;
+          height: 100px;
+        }
     </style>
 
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
+    <!-- <div id="block"></div>
+    <div id="block2"></div> -->
     <div id="root" class="app-root"></div>
+    <script>
+      function shootBullet(from, to, isCrit) {
+        var from = getCenter($('#'+from));
+        var to = getCenter($('#'+to));
+        var div = $('<div class="bullet" />').appendTo('body');
+        //Set the start  top and left
+        div.css('top', from.y);
+        div.css('left', from.x);
+        div.css('display', 'block');
+        div.animate({ "left": to.x, "top": to.y}, "slow", 'swing', () => {
+          div.remove();
+
+          var hit = $('<div class="hit" />').appendTo('body');
+          hit.css('top', to.y);
+          hit.css('left', to.x);
+          hit.css('display', 'block');
+          hit.animate({opacity: "hide", width: "250px", height: "250px"}, 600, "swing", () => {
+            hit.remove();
+          })
+
+          if (isCrit) {
+            var crit = $('<div class="crit" />').appendTo('body');
+            crit.css('top', to.y + 5);
+            crit.css('left', to.x);
+            crit.css('display', 'block');
+            crit.animate({"top": "-=100px"}, 600, "swing", () => {
+              crit.remove();
+            })
+          }
+        })
+      }
+
+      function showBleed(to) {
+        var to = getCenter($('#'+to));
+        var div = $('<div class="bleed" />').appendTo('body');
+        //Set the start  top and left
+        div.css('top', to.y - 75);
+        div.css('left', to.x + 50);
+        div.css('display', 'block');
+        div.animate({"top": "+=75px", opacity: "hide"}, "slow", 'swing', () => {
+          div.remove();
+        })
+      }
+
+      function showRegen(to) {
+        var to = getCenter($('#'+to));
+        var div = $('<div class="regen" />').appendTo('body');
+        //Set the start  top and left
+        div.css('top', to.y + 75);
+        div.css('left', to.x - 50);
+        div.css('display', 'block');
+        div.animate({"top": "-=75px", opacity: "hide"}, "slow", 'swing', () => {
+          div.remove();
+        })
+      }
+
+      function getCenter(targetNode){
+        targetNode = targetNode[0];
+        let centerX = targetNode.offsetLeft + targetNode.offsetWidth / 2;
+        let centerY = targetNode.offsetTop + targetNode.offsetHeight / 2;
+        return {x: centerX, y: centerY};
+      }
+    </script>
   </body>
 </html>
