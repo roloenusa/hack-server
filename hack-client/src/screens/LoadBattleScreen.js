@@ -7,6 +7,7 @@ import SmallCharacter from '../components/SmallCharacter';
 import posed from 'react-pose';
 
 const Container = Styled.div`
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   width: 100%;
